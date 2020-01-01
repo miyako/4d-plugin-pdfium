@@ -19,7 +19,6 @@
 		D13116A91A03ACB700DE1322 /* 4DPluginAPI.c in Sources */ = {isa = PBXBuildFile; fileRef = D13116A81A03ACB700DE1322 /* 4DPluginAPI.c */; settings = {COMPILER_FLAGS = "-Wno-multichar"; }; };
 		D134D4AC1A030BA0008D14EF /* manifest.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = D134D4A91A030B06008D14EF /* manifest.json */; };
 		D14085F623BC32E600732E75 /* libpdfium.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D14085F523BC32E600732E75 /* libpdfium.a */; };
-		D140860823BC3BAD00732E75 /* debug.o in Frameworks */ = {isa = PBXBuildFile; fileRef = D140860723BC3BAD00732E75 /* debug.o */; };
 		D140860C23BC557500732E75 /* C_BLOB.h in Headers */ = {isa = PBXBuildFile; fileRef = D140860923BC557500732E75 /* C_BLOB.h */; };
 		D140860D23BC557500732E75 /* C_BLOB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D140860A23BC557500732E75 /* C_BLOB.cpp */; };
 		D140860E23BC557500732E75 /* C_TYPES.h in Headers */ = {isa = PBXBuildFile; fileRef = D140860B23BC557500732E75 /* C_TYPES.h */; };
@@ -29,6 +28,7 @@
 		D140861623BC699D00732E75 /* 4DPlugin-JSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D140861423BC699D00732E75 /* 4DPlugin-JSON.cpp */; };
 		D140861823BC786500732E75 /* libpng16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D140861723BC786500732E75 /* libpng16.a */; };
 		D140861A23BC787300732E75 /* libz.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D140861923BC787300732E75 /* libz.a */; };
+		D1C4F34A23BC821A009E3ABC /* debug.o in Frameworks */ = {isa = PBXBuildFile; fileRef = D1C4F34923BC821A009E3ABC /* debug.o */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,6 +76,7 @@
 		D140861723BC786500732E75 /* libpng16.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng16.a; path = a/libpng16.a; sourceTree = "<group>"; };
 		D140861923BC787300732E75 /* libz.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libz.a; path = a/libz.a; sourceTree = "<group>"; };
 		D14D10DD1A03A8A5008B3411 /* constants.xlf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = constants.xlf; sourceTree = "<group>"; };
+		D1C4F34923BC821A009E3ABC /* debug.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = debug.o; path = a/debug.o; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,9 +84,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1C4F34A23BC821A009E3ABC /* debug.o in Frameworks */,
 				D140861A23BC787300732E75 /* libz.a in Frameworks */,
 				D140861823BC786500732E75 /* libpng16.a in Frameworks */,
-				D140860823BC3BAD00732E75 /* debug.o in Frameworks */,
 				D14085F623BC32E600732E75 /* libpdfium.a in Frameworks */,
 				D130064F12F02D9700702C0E /* Cocoa.framework in Frameworks */,
 			);
@@ -174,6 +175,7 @@
 		D16FBB3C22A4C07E008F0416 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D1C4F34923BC821A009E3ABC /* debug.o */,
 				D140861923BC787300732E75 /* libz.a */,
 				D140861723BC786500732E75 /* libpng16.a */,
 				D140860723BC3BAD00732E75 /* debug.o */,
@@ -300,8 +302,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "
-";
+			shellScript = "USER_NAME=keisuke.miyako@4d.com\nUUID=`uuidgen | tr -d - | tr -d '\\n' | tr '[:upper:]' '[:lower:]'`\nDEVELOPER_ID=`security find-identity -p codesigning -v | egrep 'Developer ID Application[^\"]+' -o`\nPRODUCT_PATH=\"$CODESIGNING_FOLDER_PATH\"\nxattr -cr \"$PRODUCT_PATH\"\ncodesign --remove-signature \"$PRODUCT_PATH\"\ncodesign --verbose --deep --timestamp --force --sign \"$DEVELOPER_ID\" \"$PRODUCT_PATH\"\nDMG_PATH=\"$PROJECT_DIR/$PRODUCT_NAME.dmg\"\nZIP_PATH=\"$PROJECT_DIR/$PRODUCT_NAME.zip\"\nrm \"$DMG_PATH\"\nhdiutil create -format UDBZ -plist -srcfolder \"$PRODUCT_PATH\" \"$DMG_PATH\"\necho \"xcrun stapler staple \\\"$PRODUCT_PATH\\\"\"\necho \"hdiutil create -format UDBZ -plist -srcfolder  \\\"$PRODUCT_PATH\\\" \\\"$DMG_PATH\\\" \"\necho \"ditto -c -k --keepParent \\\"$PRODUCT_PATH\\\" \\\"$ZIP_PATH\\\" \"\nxcrun altool --notarize-app --file \"$DMG_PATH\" --username \"$USER_NAME\" --password \"@keychain:altool\" --primary-bundle-id $PRODUCT_BUNDLE_IDENTIFIER.$UUID\nrm -f \"$ZIP_PATH\"\nrm -f \"$DMG_PATH\"\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
