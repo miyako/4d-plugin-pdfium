@@ -1,0 +1,10 @@
+{
+	"name": "PDFium",
+	"id": 20000,
+	"commands": [
+		{
+			"theme": "PDFium",
+			"syntax": "PDFium Test(&T;&J):C"
+		}
+	]
+}
