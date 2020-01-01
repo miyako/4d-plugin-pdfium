@@ -1,5 +1,5 @@
 # 4d-plugin-pdfium
-Proof of concept
+Proof of concept; convert PDF to PNG
 
 #### gn args
 
@@ -15,3 +15,5 @@ pdf_enable_xfa = false
 pdf_is_standalone = true
 clang_use_chrome_plugins = false
 ```
+
+using static ``libpng`` for DPI, because Chrominum excludes ``pHYs`` support.
