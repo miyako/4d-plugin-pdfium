@@ -1,21 +1,11 @@
 ﻿{
 	"methods": {
-		"generate_constants_xlf": {
-			"timeStamp": "2019-07-29T04:26:04.000Z",
-			"attributes": {
-				"invisible": true,
-				"preemptive": "capable"
-			}
-		},
 		"generate_file_from_template": {
 			"timeStamp": "2019-07-29T04:26:04.000Z",
 			"attributes": {
 				"invisible": true,
 				"preemptive": "capable"
 			}
-		},
-		"generate_project": {
-			"timeStamp": "2020-01-01T01:48:47.000Z"
 		},
 		"generate_project_infoplist": {
 			"timeStamp": "2019-07-02T13:51:21.000Z",
@@ -24,22 +14,15 @@
 				"preemptive": "capable"
 			}
 		},
-		"generate_project_plugin_stub": {
-			"timeStamp": "2019-07-23T08:36:58.000Z",
+		"generate_constants_xlf": {
+			"timeStamp": "2019-07-29T04:26:04.000Z",
 			"attributes": {
 				"invisible": true,
 				"preemptive": "capable"
 			}
 		},
-		"generate_project_source": {
-			"timeStamp": "2019-07-02T14:36:13.000Z",
-			"attributes": {
-				"invisible": true,
-				"preemptive": "capable"
-			}
-		},
-		"generate_project_vs": {
-			"timeStamp": "2019-07-24T08:49:03.000Z",
+		"update_manifest_json": {
+			"timeStamp": "2019-12-13T04:37:40.000Z",
 			"attributes": {
 				"invisible": true,
 				"preemptive": "capable"
@@ -55,8 +38,25 @@
 		"TEST": {
 			"timeStamp": "2020-01-01T07:01:09.000Z"
 		},
-		"update_manifest_json": {
-			"timeStamp": "2019-12-13T04:37:40.000Z",
+		"generate_project": {
+			"timeStamp": "2020-01-01T01:48:47.000Z"
+		},
+		"generate_project_vs": {
+			"timeStamp": "2019-07-24T08:49:03.000Z",
+			"attributes": {
+				"invisible": true,
+				"preemptive": "capable"
+			}
+		},
+		"generate_project_plugin_stub": {
+			"timeStamp": "2019-07-23T08:36:58.000Z",
+			"attributes": {
+				"invisible": true,
+				"preemptive": "capable"
+			}
+		},
+		"generate_project_source": {
+			"timeStamp": "2019-07-02T14:36:13.000Z",
 			"attributes": {
 				"invisible": true,
 				"preemptive": "capable"

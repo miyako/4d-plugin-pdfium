@@ -17,3 +17,9 @@ clang_use_chrome_plugins = false
 ```
 
 using static ``libpng`` for DPI, because Chrominum excludes ``pHYs`` support.
+
+```
+spctl -a -vv -t install PDFium.bundle: accepted
+source=Notarized Developer ID
+origin=Developer ID Application: keisuke miyako (Y69CWUC25B)
+```
