@@ -20,7 +20,11 @@
 #include <fpdfview.h>
 
 #include <libpng16/png.h>
+#if VERSIONMAC
+#include <zlib.h>
+#else
 #include <zlib/zlib.h>
+#endif
 
 #pragma mark -
 
