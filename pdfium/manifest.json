@@ -4,7 +4,8 @@
 	"commands": [
 		{
 			"theme": "PDFium",
-			"syntax": "PDFium Test(&T;&J):C"
+			"syntax": "PDFium Test(&T;&J):C",
+			"threadSafe": true
 		}
 	]
 }

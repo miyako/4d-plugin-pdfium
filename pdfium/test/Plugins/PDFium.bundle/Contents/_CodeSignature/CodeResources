@@ -8,7 +8,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			w+dVOYRJdn75JE9R2joVpkBhx7Y=
+			f5JgTxMA6XGnFGgRizVck5jZ6ao=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -17,15 +17,15 @@
 		<data>
 		4dzrub/7mHR0nEqQdIq5IZ+UIuM=
 		</data>
+		<key>Resources/manifest.json</key>
+		<data>
+		J43kITcdIg1y5yirBn6Svc5O6do=
+		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
 		<key>QuickLook/Thumbnail.png</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			hC+U8EqvyIRM1lLakHLfvl4V9Tc=
-			</data>
 			<key>hash2</key>
 			<data>
 			nGfrvibB5KlzvZgF4Bra+l0HpRloxismgTLePnOwCdk=
@@ -33,67 +33,36 @@
 		</dict>
 		<key>Resources/English.lproj/InfoPlist.strings</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			w+dVOYRJdn75JE9R2joVpkBhx7Y=
-			</data>
 			<key>hash2</key>
 			<data>
-			X0URPjaWvf+K/CU2SR/hjsQcrw/H1Ol+evq1UPlb1YM=
+			ApHZm9yNMR/u6hvuh1YDhh1SOvu4p1boztNtFJpl9vQ=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
 		<key>Resources/constants.xlf</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			4dzrub/7mHR0nEqQdIq5IZ+UIuM=
-			</data>
 			<key>hash2</key>
 			<data>
 			AzoEU6652iM9p5piQZ7wQ5y60Ey1qjzTaTQBnMX+i1M=
 			</data>
 		</dict>
+		<key>Resources/manifest.json</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			LheZm/Ln7QLcc1mPpitiBtppLB7orMzKmZVPU+FnlHk=
+			</data>
+		</dict>
 		<key>Windows/PDFium.4DX</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			sZFmv1/bkJqVIwvD27kNG4MqUko=
-			</data>
 			<key>hash2</key>
 			<data>
 			dUZDCVo9hrDHZMDjaLCCxb3q6wCkbPBpoVI18BfSxog=
 			</data>
 		</dict>
-		<key>Windows/PDFium.exp</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			xC8Acfjy+C9F50yvtEmZJUzr3mQ=
-			</data>
-			<key>hash2</key>
-			<data>
-			lLbUMIPqSaG7EtzfnmJSHR4kFJ8oNUMYf/idIyI86vs=
-			</data>
-		</dict>
-		<key>Windows/PDFium.lib</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			W1RpB/0tnaSmeFI1lVyMqq4tgNU=
-			</data>
-			<key>hash2</key>
-			<data>
-			+tpJTw9W8C9lM2h7TT3TrKWbi1qXmFz3JbdSOdZoxsI=
-			</data>
-		</dict>
 		<key>Windows/pdfium.dll</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			mSwDE3PON4BrMTSPDGZXisnIZoE=
-			</data>
 			<key>hash2</key>
 			<data>
 			ZP/1UIjYYdnC+1aHv9C8mSdrbgX+ZRcSRsoCGQokcvo=
@@ -101,56 +70,17 @@
 		</dict>
 		<key>Windows64/PDFium.4DX</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			X+TudAQ8eFqtyiq/bOPwa7AEV4k=
-			</data>
 			<key>hash2</key>
 			<data>
 			qJn6dy+iO2vGJgwXbF0SccX3iex8kdTMe9lte9lKYnQ=
 			</data>
 		</dict>
-		<key>Windows64/PDFium.exp</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			IWZvjLj4iAQe9y8L+z+cnA6KQEY=
-			</data>
-			<key>hash2</key>
-			<data>
-			5VXTTdboXM3mucnuYxM262mECosubxWeF8EBMdnZdQU=
-			</data>
-		</dict>
-		<key>Windows64/PDFium.lib</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			M5KIK/41ynvMZ1GXZ1a5JYw6u7Q=
-			</data>
-			<key>hash2</key>
-			<data>
-			XeUrSANuWmXjD0Ffxjv4jXbcVobMnkb34HuyKa1tB94=
-			</data>
-		</dict>
 		<key>Windows64/pdfium.dll</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			3pGlxxR84tZsIKZJsFBfgKgL3Mc=
-			</data>
 			<key>hash2</key>
 			<data>
 			c8LxRGoD05OD2Dd4XxzUVB1Dz9hSRLEtG1XTPhajh2s=
 			</data>
-		</dict>
-		<key>manifest.json</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			JkUn/RSiHaql2RsrvvmRn1ClAps=
-			</data>
-			<key>requirement</key>
-			<string>identifier manifest and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Y69CWUC25B</string>
 		</dict>
 	</dict>
 	<key>rules</key>
