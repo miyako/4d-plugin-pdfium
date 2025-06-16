@@ -1,0 +1,11 @@
+{
+    "name": "pdfium",
+    "id": 20000,
+    "commands": [
+        {
+            "theme": "pdfium",
+            "syntax": "pdf to image(&J;&J):C",
+            "threadSafe": true
+        }
+    ]
+}
