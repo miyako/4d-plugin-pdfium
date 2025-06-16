@@ -1,2 +1,7 @@
 pdfium/build/*
 pdfium/test/userPreferences.*
+pdfium/.vs/*
+pdfium/Objs/*
+pdfium/test/Project/test.4DProject/userPreferences.miyako/preferences.4DPreferences
+pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.exp
+pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.lib
