@@ -18,3 +18,6 @@ For each ($image; $images)
 	WRITE PICTURE FILE(Folder(fk desktop folder).platformPath+["page"; $i; ".png"].join(""); $image)
 End for each 
 ```
+
+> [!TIP]
+> The default DPI is `72`. Pass in `$2` `{dpi:144}` for example, to scale the output by `2x`.
