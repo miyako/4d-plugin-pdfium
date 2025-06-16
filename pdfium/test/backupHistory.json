@@ -1,0 +1,29 @@
+{
+	"Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Project:test.4DProject": [
+		{
+			"backupPath": "Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:data[0001].4BK",
+			"structurePath": "Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Project:test.4DProject",
+			"dataPath": "Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DD",
+			"logPath": "",
+			"startingDate": "2025-06-16T23:37:14.738Z",
+			"endingDate": "2025-06-16T23:37:14.738Z",
+			"scheduledDate": "2025-06-16T23:37:14.738Z",
+			"backupNumber": 1,
+			"duration": 102,
+			"attachments": [
+				{
+					"attachmentPath": "Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DSyncHeader",
+					"found": false
+				},
+				{
+					"attachmentPath": "Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DSyncData",
+					"found": false
+				},
+				{
+					"attachmentPath": "Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DIndx",
+					"found": false
+				}
+			]
+		}
+	]
+}

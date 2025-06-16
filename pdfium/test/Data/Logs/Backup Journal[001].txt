@@ -1,0 +1,10 @@
+*** Full Backup
+Creating archive : Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:data[0001].4BK
+Attachment(s): 
+	Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DSyncHeader [NOT FOUND]
+	Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DSyncData [NOT FOUND]
+	Macintosh HD:Users:miyako:Documents:GitHub:4d-plugin-pdfium:pdfium:test:Data:data.4DIndx [NOT FOUND]
+Scheduled 1/01/02 9:18
+Starting 2025/06/17 8:37
+Ending 2025/06/17 8:37
+
