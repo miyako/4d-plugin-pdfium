@@ -5,3 +5,4 @@ pdfium/Objs/*
 pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.exp
 pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.lib
 pdfium/test/Project/DerivedData/*
+pdfium/test/Data/*
