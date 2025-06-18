@@ -4,3 +4,20 @@
 ![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-pdfium/total)
 
 # 4d-plugin-pdfium
+
+Convert PDF pages to PNG images.
+
+```4d
+var $file : 4D.File
+$file:=File("/RESOURCES/4Dv20_LTS_brochure_English.pdf")
+var $images : Collection
+$images:=pdf to image($file)
+$i:=0
+For each ($image; $images)
+	$i+=1
+	WRITE PICTURE FILE(Folder(fk desktop folder).platformPath+["page"; $i; ".png"].join(""); $image)
+End for each 
+```
+
+> [!TIP]
+> The default DPI is `72`. Pass in `$2` `{dpi:144}` for example, to scale the output by `2x`.
