@@ -186,7 +186,7 @@ void pdf_to_image(PA_PluginParameters params) {
                                            height_px,
                                            4,
                                            rgba.data(),
-                                           width_px * 4);
+                                           width_px * 4, dpi);
 
                     PA_Variable v = PA_CreateVariable(eVK_Picture);
                     PA_Picture image = PA_CreatePicture((void *)&png_data[0], (PA_long32)png_data.size());
