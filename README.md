@@ -6,7 +6,7 @@
 ### Dependencies and Licensing
 
 * the source code of this plugin developed using the [4D Plug-in SDK](https://github.com/4d/4D-Plugin-SDK) is licensed under the MIT license.
-* see [pdfium](https://pdfium.googlesource.com/pdfium/+/main/LICENSE) for licensing of **pdfium** (Apache License 2.0).
+* see [pdfium](https://pdfium.googlesource.com/pdfium/+/main/LICENSE) for the licensing of **pdfium** (Apache License 2.0).
 * the licensing of the binary product of this plugin is subject to the licensing of all its dependencies.
 
 # 4d-plugin-pdfium
