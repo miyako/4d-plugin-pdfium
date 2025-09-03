@@ -3,6 +3,11 @@
 [![license](https://img.shields.io/github/license/miyako/4d-plugin-pdfium)](LICENSE)
 ![downloads](https://img.shields.io/github/downloads/miyako/4d-plugin-pdfium/total)
 
+### Dependencies and Licensing
+
+* the source code of this CLI tool is licensed under the MIT license.
+* **pdfium** is primarily licensed under the [Apache License 2.0](https://pdfium.googlesource.com/pdfium/+/main/LICENSE) license.
+ 
 # 4d-plugin-pdfium
 
 Convert PDF pages to PNG images.
