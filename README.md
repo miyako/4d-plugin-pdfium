@@ -5,9 +5,10 @@
 
 ### Dependencies and Licensing
 
-* the source code of this CLI tool is licensed under the MIT license.
-* **pdfium** is primarily licensed under the [Apache License 2.0](https://pdfium.googlesource.com/pdfium/+/main/LICENSE) license.
- 
+* the source code of this plugin developed using the [4D Plug-in SDK](https://github.com/4d/4D-Plugin-SDK) is licensed under the MIT license.
+* see [pdfium](https://pdfium.googlesource.com/pdfium/+/main/LICENSE) for licensing of **pdfium** (Apache License 2.0).
+* the licensing of the binary product of this plugin is subject to the licensing of all its dependencies.
+
 # 4d-plugin-pdfium
 
 Convert PDF pages to PNG images.
