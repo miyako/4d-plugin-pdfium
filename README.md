@@ -27,3 +27,9 @@ End for each
 
 > [!TIP]
 > The default DPI is `72`. Pass in `$2` `{dpi:144}` for example, to scale the output by `2x`.
+
+> [!TIP]
+> You can now pass a hex value like `0x00000000` or `none` to set the background fill colour:
+> ```
+> $images:=pdf to image($file; New object("dpi"; 300; "background"; "none"))
+> ```
