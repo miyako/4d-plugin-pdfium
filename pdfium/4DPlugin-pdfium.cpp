@@ -125,6 +125,7 @@ void pdf_to_image(PA_PluginParameters params) {
 //    PackagePtr pParams = (PackagePtr)params->fParameters;
     
     float dpi = 72.0f;
+    std::string background_rgb = "0xFFFFFFFF";
     
     PA_ObjectRef options = PA_GetObjectParameter(params, 2);
     
@@ -132,6 +133,14 @@ void pdf_to_image(PA_PluginParameters params) {
         if(ob_is_defined(options, L"dpi")) {
             dpi = ob_get_n(options, L"dpi");
         }
+        
+        CUTF8String u8;
+        if(ob_get_s(options, L"background", &u8)) {
+            if(u8 == (const uint8_t *)"none") {
+                background_rgb = "0x00000000";
+            }
+        }
+        
     }
     
     float scale = dpi / 72.0f;
@@ -151,7 +160,10 @@ void pdf_to_image(PA_PluginParameters params) {
                     int width_px = (int)(page_width_pt * scale);
                     int height_px = (int)(page_height_pt * scale);
                     FPDF_BITMAP bitmap = FPDFBitmap_Create(width_px, height_px, 1);
-                    FPDFBitmap_FillRect(bitmap, 0, 0, width_px, height_px, 0xFFFFFFFF);
+                    
+                    // Base 0 automatically detects 0x, or you can pass 16 explicitly
+                    unsigned int x = static_cast<unsigned int>(std::strtoul(background_rgb.c_str(), nullptr, 16));
+                    FPDFBitmap_FillRect(bitmap, 0, 0, width_px, height_px, x);
                     FPDF_RenderPageBitmap(bitmap, page, 0, 0, width_px, height_px, 0, 0);
                     unsigned char* buffer = static_cast<unsigned char*>(FPDFBitmap_GetBuffer(bitmap));
                     int stride = FPDFBitmap_GetStride(bitmap);

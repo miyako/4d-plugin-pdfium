@@ -30,6 +30,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include <cstdlib> // for strtoul
+
 #pragma mark -
 
 void pdf_to_image(PA_PluginParameters params);
