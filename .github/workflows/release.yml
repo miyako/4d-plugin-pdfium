@@ -23,9 +23,9 @@ permissions:
 
 env:
   # ---- edit these per-project, everything else is generic ----
-  PRODUCT_NAME: phonetic
-  XCODE_PROJECT: phonetic.xcodeproj
-  VCX_SOLUTION: phonetic.sln
+  PRODUCT_NAME: pdfium
+  XCODE_PROJECT: pdfium.xcodeproj
+  VCX_SOLUTION: pdfium.sln
   MACOS_DEPLOYMENT_TARGET: '10.13'
   # --------------------------------------------------------------
 

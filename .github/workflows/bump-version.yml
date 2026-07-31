@@ -24,7 +24,7 @@ permissions:
 
 env:
   # ---- edit these two per-project ----
-  XCODE_PROJECT: phonetic.xcodeproj
+  XCODE_PROJECT: pdfium.xcodeproj
   # -------------------------------------
 
 jobs:
