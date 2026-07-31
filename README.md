@@ -11,22 +11,27 @@
 
 # 4d-plugin-pdfium
 
-The **pdfium** plugin renders the pages of a PDF file to bitmap images,
-returning one picture per page. It is built on Google's PDFium library and is
-intended for tasks like generating page thumbnails, previews, or print-ready
-rasterizations of PDF documents directly from 4D code — without needing an
-external converter or scripting another application.
+The **pdfium** plugin renders the pages of a PDF file to rasterized images using Google's PDFium library, returning one in-memory `Picture` (PNG-encoded) per page in a `Collection`. It's intended for generating page previews, thumbnails, or print-resolution rasterizations of a PDF directly from 4D code, without shelling out to another application.
 
-The plugin initializes the PDFium library once, when it's loaded into the
-4D application (and into each 4D Server process, if used in a two-tier or
-remote deployment), and releases it on unload.
+| Command | Returns | Purpose |
+|---|---|---|
+| [`pdf to image`](#pdf-to-image) | Collection | Renders every page of a PDF file to a PNG `Picture`, one collection element per page |
+
+**Platforms:** Windows, macOS. The plugin doesn't call any platform-version-gated system API (no minimum-OS-version requirement could be identified from the source); the one platform-specific code path (see below) affects internal path resolution only, not the command's visible behavior or signature.
+
+---
+
+## Requirements & platform notes
+
+- The plugin exposes a **single command**, `pdf to image`. There is no version of it that takes more or fewer parameters than documented below.
+- `file` is **mandatory** and must be a `4D.File` object — passing a `4D.Folder`, a plain text path, or `Null` will not resolve to a path internally and the command will behave as if the file doesn't exist (see Error handling).
+- `options` is **optional**; when omitted, rendering defaults to 72 dpi with an opaque white background.
+- **Internal-only macOS path handling:** resolving the input `4D.File` object to a native filesystem path takes an extra step on macOS (re-reading the resolved object's `path` property after the initial `platformPath` lookup) that Windows doesn't need. This is transparent to the caller — it doesn't change what paths you can pass or how the command behaves — but is worth knowing if you're debugging path-resolution issues that only reproduce on one OS.
+- **`dpi` and page-size limits are silently enforced, not validated with an error.** See the command's Description and Error handling sections — out-of-range or oversized requests are clamped or skipped rather than raising a 4D error.
 
 ---
 
 ## `pdf to image`
-
-Renders every page of a PDF file to an in-memory image and returns them as a
-collection.
 
 ### Syntax
 
@@ -39,167 +44,97 @@ result:Collection := pdf to image(file:Object; options:Object)
 
 | Parameter | Type | Description |
 |---|---|---|
-| `file` | Object (4D.File) | The PDF file to render. Pass a `4D.File` object pointing at the `.pdf` on disk (e.g. from `File(path)` or a `Folder`/`File` navigation). |
-| `options` | Object | *(Optional)* Rendering options — see below. |
-| `result` | Collection | One element per page of the PDF, in page order (see **Return value**). |
+| `file` | Object (4D.File) | The PDF file to render. Must be a `4D.File` object (e.g. from `File(path)` or `Folder(...).file(...)`) — mandatory. |
+| `options` | Object | Optional. Properties below; any omitted property uses its default. |
+| &nbsp;&nbsp;`options.dpi` | Real | Rendering resolution in dots per inch. Default `72`. Internally clamped to the range **10–1200**; a value outside this range is silently adjusted to the nearest bound rather than rejected. |
+| &nbsp;&nbsp;`options.background` | Text | Set to `"none"` for a transparent background. Any other value, or omitting the property, renders an opaque white background. |
+| Result | Collection | One element per page, in page order: a `Picture` on success, `Null` for a page that failed to render (see Description). See Error handling for the case where the collection can end up **shorter** than the page count. |
 
-### `options` properties
+### Description
 
-| Property | Type | Default | Description |
-|---|---|---|---|
-| `dpi` | Real | `72` | Rendering resolution in dots per inch. Higher values produce larger, sharper images at the cost of memory and render time. **The plugin clamps this internally to the range 10–1200 dpi** — values outside this range are silently adjusted to the nearest bound rather than rejected. |
-| `background` | Text | *(opaque white)* | Set to `"none"` to render with a **transparent** background instead of opaque white. Any other value (or omitting the property) keeps the default opaque white fill. |
+Each page is rendered independently at `options.dpi` (or 72 if not given), converted from PDFium's native BGRA buffer to RGBA, and PNG-encoded with the requested dpi embedded in the PNG's `pHYs` chunk. The returned `Picture` therefore already carries the correct physical-size metadata for applications that respect it (e.g. when placed in a print layout).
 
-### Return value
+Two independent guards affect whether a given page comes back as a real image or as `Null`:
 
-A **collection** with exactly one element per page in the source PDF, in
-page order:
+- **dpi is clamped to 10–1200** before any rendering happens. There is no way to request a dpi outside this range — 4D never sees an error, the effective value is just adjusted.
+- **Rendered pixel dimensions are capped at 10,000px per side.** A `dpi`/page-size combination whose result would exceed that on either axis causes that page to be skipped — its collection element is `Null` — rather than attempting the (potentially very large) allocation.
 
-- On success, the element is a **Picture** (PNG-encoded) of that page,
-  rasterized at the requested `dpi`.
-- On failure for a given page — the page couldn't be loaded, or its
-  rendered dimensions were invalid or too large (see **Limits** below) — the
-  corresponding element is `Null` rather than a picture. This lets you
-  detect and skip problem pages without the whole call failing.
-- If the input file itself can't be opened/parsed as a PDF, an **empty
-  collection** is returned.
+If the bitmap for a page can't be allocated for any other reason, or the page itself fails to load, that page's element is likewise `Null`. Other pages in the same document are unaffected and continue to render normally.
 
-### Limits
+If `file` doesn't resolve to a loadable PDF at all (wrong type of object, file doesn't exist, not a valid PDF), the command returns an **empty collection** — there's no element per intended page, since the page count is never known.
 
-- Maximum rendered page dimension: **10,000 pixels** per side. A page/DPI
-  combination that would exceed this on either axis is skipped (returns
-  `Null` for that page) rather than attempting a very large allocation.
-- `dpi` is clamped to **10–1200**.
+### Example
 
-These limits exist to keep a single call bounded in memory and time
-regardless of what dpi or page sizes are requested; they are not
-independently configurable.
+From the plugin's own test method (`test.4dm`):
 
-### Performance notes
+```4d
+//%attributes = {}
+$file:=File:C1566("/RESOURCES/4Dv20_LTS_brochure_English.pdf")
+$file:=Folder:C1567(fk desktop folder:K87:19).file("Logo.pdf")
 
-- Rendering is done page-by-page and is CPU/memory-bound by the requested
-  `dpi` and each page's physical size — a full-bleed poster-sized page at
-  1200 dpi will take meaningfully longer and use meaningfully more memory
-  than a normal document at 72 dpi.
-- The plugin yields control back to 4D periodically during pixel conversion
-  on large pages so the interface doesn't freeze during long conversions,
-  but very large documents/DPI combinations will still take proportionally
-  longer to return.
 
----
+$images:=pdf to image($file; New object:C1471("dpi"; 300; "background"; "none"))
 
-## Sample code
+$i:=0
+For each ($image; $images)
+	$i:=$i+1
+	//TRANSFORM PICTURE($image;Scale;72/300;72/300)
+	WRITE PICTURE FILE:C680(Folder:C1567(fk desktop folder:K87:19).platformPath+"page"+String:C10($i)+".png"; $image)
+End for each
+```
 
-### Basic usage — render at default (screen) resolution
+The commented-out `TRANSFORM PICTURE` line is a useful pattern worth calling out: render once at a high dpi for quality, then scale the resulting `Picture` back down (here, 300 dpi → a nominal 72 dpi) if you need a smaller on-screen copy without re-rendering the page from the PDF.
+
+Rendering at the default resolution, with no options:
 
 ```4d
 $file:=File("/RESOURCES/sample.pdf")
 $images:=pdf to image($file)
 
-// $images.length equals the PDF's page count
+// $images.length equals the PDF's page count, unless the file failed to load
 // $images[0] is the Picture for page 1, etc.
 ```
 
-### Render at print resolution (300 dpi), transparent background
-
-This mirrors the plugin's own test sample (`test.4dm`):
+Skipping pages that failed to render:
 
 ```4d
-$file:=File("/RESOURCES/4Dv20_LTS_brochure_English.pdf")
-$file:=Folder(fk desktop folder).file("Logo.pdf")
-
-$images:=pdf to image($file; New object("dpi"; 300; "background"; "none"))
-
-$i:=0
-For each ($image; $images)
-	$i:=$i+1
-	//TRANSFORM PICTURE($image; Scale; 72/300; 72/300)  // optional: scale back down after high-dpi render
-	WRITE PICTURE FILE(Folder(fk desktop folder).platformPath+"page"+String($i)+".png"; $image)
-End for each
-```
-
-The commented-out `TRANSFORM PICTURE` line above is a useful pattern: render
-at a high dpi for quality, then scale the resulting picture back down (here,
-from 300 dpi to a nominal 72 dpi) if you need a smaller on-screen image
-without re-rendering the page.
-
-### Saving each page as a separate PNG file, skipping failed pages
-
-```4d
-var $file : 4D.File
-var $images : Collection
-var $i : Integer
-
 $file:=File("/RESOURCES/report.pdf")
 $images:=pdf to image($file; New object("dpi"; 150))
 
 $i:=0
 For each ($image; $images)
 	$i:=$i+1
-	If ($image#Null)
-		WRITE PICTURE FILE(Folder(fk desktop folder).platformPath+"page_"+String($i)+".png"; $image)
-	Else
+	If ($image=Null)
 		ALERT("Page "+String($i)+" could not be rendered.")
 	End if
 End for each
 ```
 
-### Displaying a page in a form picture variable
+---
+
+## Error handling & troubleshooting
+
+- **Invalid or unresolvable `file` returns an empty collection, not an error.** There's no 4D error raised if the PDF can't be opened — check `$images.length=0` (or compare it against the page count you expect) rather than wrapping the call in error-handling for a thrown exception.
+- **A `Null` element means that specific page failed — the call itself didn't fail.** Always test each collection element (`If ($image=Null)`) before using it; don't assume every element is a `Picture` just because the collection is non-empty.
+- **The collection can come back shorter than the actual page count.** If an internal error occurs partway through rendering (for example, an unexpectedly large allocation failing), the plugin stops processing further pages and returns whatever was already rendered — it does not pad the remainder with `Null`. Don't assume `$images.length` always equals the PDF's page count; if you need to detect this case, compare the returned length against the page count from another source if that matters to your workflow.
+- **`dpi` outside 10–1200 is silently clamped, not rejected.** If your renders look lower- or higher-resolution than requested, check whether the requested value was outside that range.
+- **A dpi/page-size combination exceeding 10,000px per side produces a `Null` for that page**, not a very slow or very large render. Lower the `dpi` for oversized pages if you hit this.
+- **`file` must be a `4D.File`, not a `4D.Folder` or a text path.** Passing the wrong object type won't raise an error either — it behaves the same as an unresolvable file (empty collection).
+
+---
+
+## Quick reference
 
 ```4d
-$file:=File("/RESOURCES/contract.pdf")
-$images:=pdf to image($file)
-
-If ($images.length>0) & ($images[0]#Null)
-	vPreviewPicture:=$images[0]  // bind to a picture variable on your form
-End if
-```
-
-### Defensive pattern — handling per-page failures
-
-Because individual pages can come back as `Null` (rather than the whole
-call failing), always check each element before use:
-
-```4d
-var $images : Collection
-var $i : Integer
-var $failedPages : Collection
-
-$images:=pdf to image(File("/RESOURCES/sample.pdf"))
-$failedPages:=New collection
+// Render at 300 dpi, transparent background, save each page as PNG
+$file:=File("/RESOURCES/sample.pdf")
+$images:=pdf to image($file; New object("dpi"; 300; "background"; "none"))
 
 $i:=0
 For each ($image; $images)
 	$i:=$i+1
-	If ($image=Null)
-		$failedPages.push($i)  // 1-based page number
+	If ($image#Null)
+		WRITE PICTURE FILE(Folder(fk desktop folder).platformPath+"page"+String($i)+".png"; $image)
 	End if
 End for each
-
-If ($failedPages.length>0)
-	ALERT("Some pages could not be rendered: "+$failedPages.join(", "))
-End if
 ```
-
----
-
-## Error handling summary
-
-| Situation | Behavior |
-|---|---|
-| File doesn't exist / isn't a valid PDF | Returns an **empty collection** |
-| A specific page fails to load or render | That page's collection element is **`Null`**; other pages are unaffected |
-| `dpi` outside 10–1200 | Silently clamped to nearest bound, no error |
-| Requested pixel dimensions exceed 10,000px per side | That page's element is `Null` |
-| `options` omitted entirely | Renders at 72 dpi with opaque white background |
-
----
-
-## Version / implementation notes
-
-- Output format is always **PNG**, embedding the requested DPI in the PNG's
-  `pHYs` chunk (useful if the image is later opened in an application that
-  respects that metadata for print sizing).
-- Internally uses Google's PDFium library for parsing/rendering; color
-  conversion (PDFium's native BGRA → RGBA) happens in-plugin before PNG
-  encoding.
