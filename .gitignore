@@ -7,3 +7,4 @@ pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.lib
 pdfium/test/Project/DerivedData/*
 pdfium/test/Data/*
 pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.pdb
+build/*
