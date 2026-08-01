@@ -135,7 +135,7 @@ void pdf_to_image(PA_PluginParameters params) {
         }
         
         CUTF8String u8;
-        if(ob_get_s(options, L"background", &u8)) {
+        if(ob_get_a(options, L"background", &u8)) {
             if(u8 == (const uint8_t *)"none") {
                 background_rgb = "0x00000000";
             }
