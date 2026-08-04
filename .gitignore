@@ -8,3 +8,6 @@ pdfium/test/Project/DerivedData/*
 pdfium/test/Data/*
 pdfium/test/Plugins/pdfium.bundle/Contents/Windows64/pdfium.pdb
 build/*
+test/userPreferences.*
+test/Project/DerivedData/methodAttributes.json
+test/Project/DerivedData/formAttributes.json
