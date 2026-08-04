@@ -11,3 +11,5 @@ build/*
 test/userPreferences.*
 test/Project/DerivedData/methodAttributes.json
 test/Project/DerivedData/formAttributes.json
+test/Data/data.4DD
+test/Data/data.journal
