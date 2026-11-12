@@ -58,42 +58,64 @@ static bool _object_to_path(PA_ObjectRef f, std::string& path, int type) {
     if(f != NULL) {
         C_TEXT pp;
         pp.setUTF8String((const uint8_t *)"platformPath", 12);
-        PA_Unistring PLATFORMPATH = PA_CreateUnistring((PA_Unichar *)pp.getUTF16StringPtr());
-        
-        if(PA_GetObjectPropertyType(f, &PLATFORMPATH) == eVK_Unistring) {
-            
-            PA_Variable p = PA_GetObjectProperty(f, &PLATFORMPATH);
-            PA_Variable    cbparams[2];
-            cbparams[0] = PA_CreateVariable(eVK_Unistring);
-            cbparams[1] = PA_CreateVariable(eVK_Longint);
+        PA_Unistring PLATFORMPATH = PA_CreateUnistring((PA_Unichar *)pp.getUTF16StringPtr());//PA_DisposeUnistring
+        PA_VariableKind vk = PA_GetObjectPropertyType(f, &PLATFORMPATH);
+        if(vk == eVK_Unistring) {
+            PA_Variable p = PA_GetObjectProperty(f, &PLATFORMPATH);//PA_ClearVariable
+            // On error p is uninitialised: neither read nor clear it. Check
+            // before PA_GetStringVariable, which resets the last error.
+            if(PA_GetLastError() != eER_NoErr) {
+                PA_DisposeUnistring(&PLATFORMPATH);
+                return false;
+            }
             PA_Unistring platformPath = PA_GetStringVariable(p);
-            PA_SetStringVariable(&cbparams[0], &platformPath);
+            // Copy the text now: platformPath is borrowed from p. It used to be
+            // handed to cbparams[0] as well, so clearing cbparams[0] and then p
+            // disposed the same string twice.
+            CUTF16String path16(platformPath.fString ? platformPath.fString : (PA_Unichar *)L"",
+                                platformPath.fString ? (size_t)platformPath.fLength : 0);
+            PA_Variable cbparams[2];
+            // eVK_Undefined: PA_CreateVariable(eVK_Unistring) allocates an
+            // empty string that PA_SetStringVariable would overwrite (leak).
+            cbparams[0] = PA_CreateVariable(eVK_Undefined);
+            cbparams[1] = PA_CreateVariable(eVK_Longint);
+            PA_Unistring argPath = PA_CreateUnistring((PA_Unichar *)path16.c_str());//owned by cbparams[0]
+            PA_SetStringVariable(&cbparams[0], &argPath);
             PA_SetLongintVariable(&cbparams[1], 1/*fk platform path*/);
             PA_Variable folder = PA_ExecuteCommandByID(type, cbparams, 2);
+            PA_ClearVariable(&cbparams[0]);
+            PA_ClearVariable(&cbparams[1]);
+            PA_ClearVariable(&p);
             
 #if VERSIONMAC
-            pp.setUTF8String((const uint8_t *)"path", 4);
-            PA_Unistring PATH = PA_CreateUnistring((PA_Unichar *)pp.getUTF16StringPtr());
-            PA_Variable _p = PA_GetObjectProperty(PA_GetObjectVariable(folder), &PATH);
-            platformPath = PA_GetStringVariable(_p);
+            // the constructor returns no object for an invalid path
+            PA_ObjectRef folderObj = PA_GetObjectVariable(folder);
+            path16.clear();
+            if (folderObj) {
+                pp.setUTF8String((const uint8_t *)"path", 4);
+                PA_Unistring PATH = PA_CreateUnistring((PA_Unichar *)pp.getUTF16StringPtr());//PA_DisposeUnistring
+                PA_Variable _p = PA_GetObjectProperty(folderObj, &PATH);//PA_ClearVariable
+                PA_ErrorCode err = PA_GetLastError();
+                if (err == eER_NoErr && PA_GetVariableKind(_p) == eVK_Unistring) {
+                    PA_Unistring posixPath = PA_GetStringVariable(_p);
+                    if (posixPath.fString) {
+                        path16 = CUTF16String(posixPath.fString, (size_t)posixPath.fLength);
+                    }
+                }
+                PA_DisposeUnistring(&PATH);
+                if (err == eER_NoErr) PA_ClearVariable(&_p);
+            }
 #endif
+            // The 4D.File constructor result is owned by the plugin.
+            PA_ClearVariable(&folder);
             C_TEXT t;
-            t.setUTF16String(&platformPath);
+            t.setUTF16String(&path16);
             CUTF8String u8;
             t.copyUTF8String(&u8);
             path = std::string((const char *)u8.c_str(), u8.size());
-            
-            PA_ClearVariable(&cbparams[0]);
-            PA_ClearVariable(&cbparams[1]);//PLATFORMPATH belongs to variable. no need to dispose
-#if VERSIONMAC
-            PA_DisposeUnistring(&PATH);
-            PA_ClearVariable(&_p);//see .h of PA_GetObjectProperty
-#endif
-            PA_ClearVariable(&p);//see .h of PA_GetObjectProperty
-            
-            return true;
         }
-    
+        PA_DisposeUnistring(&PLATFORMPATH);
+        return (vk == eVK_Unistring);
     }
     
     return false;
@@ -222,7 +244,8 @@ void pdf_to_image(PA_PluginParameters params) {
                                                        width_px * 4, dpi);
                                 
                                 if(!png_data.empty()) {
-                                    PA_Variable v = PA_CreateVariable(eVK_Picture);
+                                    // eVK_Undefined: eVK_Picture would allocate a value that the shallow PA_SetPictureVariable below overwrites and leaks
+                                    PA_Variable v = PA_CreateVariable(eVK_Undefined);
                                     PA_Picture image = PA_CreatePicture((void *)png_data.data(), (PA_long32)png_data.size());
                                     PA_SetPictureVariable(&v, image);
                                     PA_SetCollectionElement(images, PA_GetCollectionLength(images), v);
